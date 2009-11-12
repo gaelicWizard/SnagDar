@@ -62,7 +62,8 @@ function AuthAndStoreCookieInFile() {
 }
 
 base_url="http://www.opensource.apple.com"
-projects_url="$base_url/text/mac-os-x-1061.txt"
+system_version="$(sw_vers -productVersion | awk -F. '{print $1$2$3}')"
+projects_url="$base_url/text/mac-os-x-$system_version.txt"
 cookie_file="/tmp/com.apple.daw.apsl.cookie.txt.$$"
 
 # If no arg was specified, just display the projects file
