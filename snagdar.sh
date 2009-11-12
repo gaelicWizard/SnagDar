@@ -62,7 +62,7 @@ function AuthAndStoreCookieInFile() {
 }
 
 base_url=http://www.opensource.apple.com/darwinsource
-projects_url=$base_url/10.6.2/projects-list.txt
+projects_url=$base_url/10.5.6/projects-list.txt
 cookie_file=/tmp/com.apple.daw.apsl.cookie.txt.$$
 
 # If no arg was specified, just display the projects file
