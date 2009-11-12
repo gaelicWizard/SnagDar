@@ -44,6 +44,7 @@
 # (and only) argument to this function.
 function AuthAndStoreCookieInFile() {
   source ~/.snagdarpass
+  password="$(security -q find-internet-password -a "$username" -s daw.apple.com -g 2>&1 | ruby -e 'print $1 if STDIN.gets =~ /^password: "(.*)"$/')"
 
   if [[ -z $username || -z $password ]]
   then
@@ -61,7 +62,7 @@ function AuthAndStoreCookieInFile() {
 }
 
 base_url=http://www.opensource.apple.com/darwinsource
-projects_url=$base_url/10.4.9.x86/projects-list.txt
+projects_url=$base_url/10.6.2/projects-list.txt
 cookie_file=/tmp/com.apple.daw.apsl.cookie.txt.$$
 
 # If no arg was specified, just display the projects file
