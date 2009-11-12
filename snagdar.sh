@@ -46,42 +46,42 @@ function AuthAndStoreCookieInFile() {
   source ~/.snagdarpass
   password="$(security -q find-internet-password -a "$username" -s daw.apple.com -g 2>&1 | ruby -e 'print $1 if STDIN.gets =~ /^password: "(.*)"$/')"
 
-  if [[ -z $username || -z $password ]]
+  if [[ -z "$username" || -z "$password" ]]
   then
     echo ERROR: no username and password found
     exit 1
   fi
 
-  touch $1
-  chmod 0600 $1
+  touch "$1"
+  chmod 0600 "$1"
 
-  auth_action=$(curl -sL $base_url/tarballs/apsl/ | grep appleConnectForm \
+  auth_action=$(curl -sL "$base_url/tarballs/apsl/" | grep appleConnectForm \
                 | awk 'BEGIN { RS = "\"" } ; {print $1}' | grep cgi)
   auth_url="https://daw.apple.com$auth_action?theAccountName=$username&theAccountPW=$password"
   curl -sL "$auth_url" -c $1 > /dev/null
 }
 
-base_url=http://www.opensource.apple.com
-projects_url=$base_url/text/mac-os-x-1061.txt
-cookie_file=/tmp/com.apple.daw.apsl.cookie.txt.$$
+base_url="http://www.opensource.apple.com"
+projects_url="$base_url/text/mac-os-x-1061.txt"
+cookie_file="/tmp/com.apple.daw.apsl.cookie.txt.$$"
 
 # If no arg was specified, just display the projects file
-test -z $1 && exec curl -sL $projects_url
+test -z "$1" && exec curl -sL "$projects_url"
 
 # Authenticate with Apple's servers
-AuthAndStoreCookieInFile $cookie_file
+#AuthAndStoreCookieInFile $cookie_file
 
 # D/l and untar all projects that match the regex in $1
-exec < <(curl -bL $cookie_file -s $projects_url | grep -v ^\# | egrep "$1")
+exec < <(curl -bL "$cookie_file" -s "$projects_url" | grep -v ^\# | egrep "$1")
 while read line
 do
-  tarball=$(echo $line | awk '{print $1"-"$2}')
-  dir=$(echo $line | awk '{print $3}' | tr '[:upper:]' '[:lower:]')
-  dl_url=$base_url/tarballs/$1/$tarball.tar.gz
+  tarball="$(echo "$line" | awk '{print $1"-"$2}')"
+  dir="$(echo "$line" | awk '{print $3}' | tr '[:upper:]' '[:lower:]')"
+  dl_url="$base_url/tarballs/$1/$tarball.tar.gz"
 
   printf "\n +++++ Snagging %s\n" $dl_url
-  curl -bL $cookie_file $dl_url | tar zxf -
+  curl -bL "$cookie_file" "$dl_url" | tar zxf -
 done
 
-rm $cookie_file
+rm "$cookie_file"
 
