@@ -83,5 +83,4 @@ do
   curl -bL "$cookie_file" "$dl_url" | tar zxf -
 done
 
-rm "$cookie_file"
-
+#rm "$cookie_file"
