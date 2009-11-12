@@ -66,13 +66,13 @@ projects_url=$base_url/10.5.6/projects-list.txt
 cookie_file=/tmp/com.apple.daw.apsl.cookie.txt.$$
 
 # If no arg was specified, just display the projects file
-test -z $1 && exec curl -s $projects_url
+test -z $1 && exec curl -sL $projects_url
 
 # Authenticate with Apple's servers
 AuthAndStoreCookieInFile $cookie_file
 
 # D/l and untar all projects that match the regex in $1
-exec < <(curl -b $cookie_file -s $projects_url | grep -v ^\# | egrep "$1")
+exec < <(curl -bL $cookie_file -s $projects_url | grep -v ^\# | egrep "$1")
 while read line
 do
   tarball=$(echo $line | awk '{print $1"-"$2}')
@@ -80,7 +80,7 @@ do
   dl_url=$base_url/tarballs/$dir/$tarball.tar.gz
 
   printf "\n +++++ Snagging %s\n" $dl_url
-  curl -b $cookie_file $dl_url | tar zxf -
+  curl -bL $cookie_file $dl_url | tar zxf -
 done
 
 rm $cookie_file
