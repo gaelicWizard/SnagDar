@@ -76,8 +76,8 @@ exec < <(curl -bL "$cookie_file" -s "$projects_url" | grep -v ^\# | egrep "$1")
 while read line
 do
   tarball="$(echo "$line" | awk '{print $1"-"$2}')"
-  dir="$(echo "$line" | awk '{print $3}' | tr '[:upper:]' '[:lower:]')"
-  dl_url="$base_url/tarballs/$1/$tarball.tar.gz"
+  dir="$(echo "$line" | awk '{print $1}')"
+  dl_url="$base_url/tarballs/$dir/$tarball.tar.gz"
 
   printf "\n +++++ Snagging %s\n" "$dl_url"
   curl -bL "$cookie_file" "$dl_url" | tar zxf -
